@@ -24,39 +24,14 @@
                 </tr>
             </thead>
             <tbody>
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $task->title }}</td>
-                        <td>{{ $task->description }}</td>
-                        <td>
-                            <span class="badge {{ $task->is_completed ? 'bg-success' : 'bg-secondary' }}">
-                                {{ $task->is_completed ? 'Completed' : 'Pending' }}
-                        </td>
-                        <td>
-                            <form action="{{ route('tasks.update', $task) }}" method="POST" class="d-inline">
-                                @csrf 
-                                @method('PUT')
-                                <input type="hidden" name="is_completed" value="{{ $task->is_completed ? 0 : 1 }}">
-                                <button type="submit" class="btn btn-sm {{ $task->is_completed ? 'btn-warning' : 'btn-primary' }}">
-                                    {{ $task->is_completed ? 'Mark as Pending' : 'Mark as Completed' }}
-                                </button>
-                            </form>
-
-                            <form action="{{ route('tasks.destroy', $task) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger"
-                                    onclick="return confirm('Are you sure?')">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
+                <!-- Data will be loaded via AJAX -->
             </tbody>
         </table>
     </div>
 </div>
 
 <!-- Add Task Modal -->
- <div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskLabel" aria-hidden="true">
+<div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskLabel" aria-hidden="true">
     <div class="modal-dialog">
         <form method="POST" action="{{ route('tasks.store') }}">
             @csrf
@@ -76,13 +51,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
                     <button type="submit" class="btn btn-primary">Create Task</button>
                 </div>
             </div>
         </form>
     </div>
- </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -93,11 +67,45 @@
             serverSide: true,
             ajax: '{{ route('tasks.data') }}',
             columns: [
-                { data: 'id', name: 'id '},
+                { data: 'id', name: 'id' },
                 { data: 'title', name: 'title' },
                 { data: 'description', name: 'description' },
-                { data: 'status', name: 'status' },
-                { data: 'actions', name: 'actions', orderable: false, searchable: false },
+                { 
+                    data: 'status', 
+                    name: 'status',
+                    render: function(data, type, row) {
+                        var badgeClass = row.is_completed ? 'bg-success' : 'bg-secondary';
+                        var statusText = row.is_completed ? 'Completed' : 'Pending';
+                        return '<span class="badge ' + badgeClass + '">' + statusText + '</span>';
+                    }
+                },
+                { 
+                    data: 'actions', 
+                    name: 'actions', 
+                    orderable: false, 
+                    searchable: false,
+                    render: function(data, type, row) {
+                        var toggleBtnClass = row.is_completed ? 'btn-warning' : 'btn-primary';
+                        var toggleBtnText = row.is_completed ? 'Mark as Pending' : 'Mark as Completed';
+                        
+                        return `
+                            <form action="/tasks/${row.id}" method="POST" class="d-inline">
+                                @csrf 
+                                @method('PUT')
+                                <input type="hidden" name="is_completed" value="${row.is_completed ? 0 : 1}">
+                                <button type="submit" class="btn btn-sm ${toggleBtnClass}">
+                                    ${toggleBtnText}
+                                </button>
+                            </form>
+
+                            <form action="/tasks/${row.id}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        `;
+                    }
+                },
             ]
         });
     });
