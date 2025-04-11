@@ -4,7 +4,13 @@
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Your Tasks</h5>
-        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addTaskModal">Add Task</button>
+        <div class="btn-group">
+            <a href="{{ route('tasks.export', 'csv') }}" class="btn btn-outline-secondary btn-sm">Export CSV</a>
+            <a href="{{ route('tasks.export', 'xlsx') }}" class="btn btn-outline-secondary btn-sm">Export Excel</a>
+        </div>
+        <div>
+            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addTaskModal">Add Task</button>
+        </div>
     </div>
     <div class="card-body">
         <table class="table table-striped" id="tasksTable">

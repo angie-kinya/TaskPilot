@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Exports\TasksExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\DataTables;
 
 class TaskController extends Controller
@@ -55,5 +57,12 @@ class TaskController extends Controller
         $task->delete();
 
         return redirect()->route('tasks.index')->with('success', 'Task deleted successfully!');
+    }
+
+    public function export($format) 
+    {
+        $filename = 'tasks_export_' .now()->format('Ymd_His') . '.' . $format;
+
+        return Excel::download(new TasksExport, $filename);
     }
 }

@@ -15,3 +15,4 @@ Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.e
 Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
 Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
+Route::get('/tasks/export/{format}', [TaskController::class, 'export'])->name('tasks.export');
