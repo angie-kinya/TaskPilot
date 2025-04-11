@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Task;
+use Yajra\DataTables\DataTables;
 
 class TaskController extends Controller
 {
@@ -11,6 +12,21 @@ class TaskController extends Controller
     {
         $tasks = Task::orderBy('created_at', 'desc')->get();
         return view('tasks.index', compact('tasks'));
+    }
+
+    public function getData()
+    {
+        $tasks = Task::query();
+
+        return DataTables::of($tasks)
+            ->addColumn('status', function ($task) {
+                return $task->is_completed ? 'Completed' : 'Pending';
+            })
+            ->addColumn('actions', function ($task) {
+                return view('tasks.partials.actions', compact('task'))->render();
+            })
+            ->rawColumns(['actions']) // allow HTML in 'actions' column
+            ->make(true);
     }
 
     public function store(Request $request)
