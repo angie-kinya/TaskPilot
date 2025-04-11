@@ -18,7 +18,6 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($tasks as $index => $task)
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $task->title }}</td>
@@ -45,7 +44,6 @@
                             </form>
                         </td>
                     </tr>
-                @endforeach
             </tbody>
         </table>
     </div>
@@ -84,7 +82,18 @@
 @push('scripts')
 <script>
     $(document).ready(function () {
-        $('#tasksTable').DataTable();
+        $('#tasksTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: '{{ route('tasks.data') }}',
+            columns: [
+                { data: 'id', name: 'id '},
+                { data: 'title', name: 'title' },
+                { data: 'description', name: 'description' },
+                { data: 'status', name: 'status' },
+                { data: 'actions', name: 'actions', orderable: false, searchable: false },
+            ]
+        });
     });
 </script>
 @endpush
