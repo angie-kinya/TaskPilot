@@ -18,7 +18,8 @@ class TaskController extends Controller
 
     public function edit(Task $task)
     {
-        return response()->json($task);
+        return redirect()->route('tasks.index')->with('success', 'Task edited successfully!');
+        //return response()->json($task);
     }
 
     public function getData()

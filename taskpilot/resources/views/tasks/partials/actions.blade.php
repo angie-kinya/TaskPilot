@@ -1,9 +1,9 @@
-<button class="btn btn-sm btn-info edit-task" 
+<!-- <button class="btn btn-sm btn-info edit-task" 
         data-id="{{ $task->id }}"
         data-bs-toggle="modal" 
         data-bs-target="#editTaskModal">
     Edit
-</button>
+</button> -->
 
 <form action="{{ route('tasks.update', $task) }}" method="POST" class="d-inline">
     @csrf 

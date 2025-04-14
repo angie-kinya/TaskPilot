@@ -58,7 +58,7 @@
     </div>
 </div>
 <!-- Edit Task Modal -->
-<div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskLabel" aria-hidden="true">
     <div class="modal-dialog">
         <form id="editTaskForm" method="POST">
             @csrf
@@ -84,7 +84,7 @@
             </div>
         </form>
     </div>
-</div>
+</div> -->
 
 @endsection
 
@@ -118,12 +118,7 @@
                         var toggleBtnText = row.is_completed ? 'Mark as Pending' : 'Mark as Completed';
                         
                         return `
-                            <button class="btn btn-sm btn-info edit-task" 
-                                    data-id="${row.id}"
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#editTaskModal">
-                                Edit
-                            </button>
+                            
 
                             <form action="/tasks/${row.id}" method="POST" class="d-inline">
                                 @csrf 
