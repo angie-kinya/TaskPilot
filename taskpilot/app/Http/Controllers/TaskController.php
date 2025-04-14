@@ -16,6 +16,11 @@ class TaskController extends Controller
         return view('tasks.index', compact('tasks'));
     }
 
+    public function edit(Task $task)
+    {
+        return response()->json($task);
+    }
+
     public function getData()
     {
         $tasks = Task::query();

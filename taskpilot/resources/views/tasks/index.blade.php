@@ -57,6 +57,35 @@
         </form>
     </div>
 </div>
+<!-- Edit Task Modal -->
+<div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="editTaskForm" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTaskLabel">Edit Task</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="edit_title" class="form-label">Task Title</label>
+                        <input type="text" class="form-control" id="edit_title" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_description" class="form-label">Task Description</label>
+                        <textarea class="form-control" id="edit_description" name="description"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update Task</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
@@ -89,6 +118,13 @@
                         var toggleBtnText = row.is_completed ? 'Mark as Pending' : 'Mark as Completed';
                         
                         return `
+                            <button class="btn btn-sm btn-info edit-task" 
+                                    data-id="${row.id}"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#editTaskModal">
+                                Edit
+                            </button>
+
                             <form action="/tasks/${row.id}" method="POST" class="d-inline">
                                 @csrf 
                                 @method('PUT')
@@ -107,6 +143,15 @@
                     }
                 },
             ]
+        });
+    });
+
+    $(document).on('click', '.edit-task', function() {
+        const taskId = $(this).data('id');
+        $.get(`/tasks/${taskId}/edit`, function(data) {
+            $('#editTaskForm').attr('action', `/tasks/${taskId}`);
+            $('#edit_title').val(data.title);
+            $('#edit_description').val(data.description);
         });
     });
 </script>
